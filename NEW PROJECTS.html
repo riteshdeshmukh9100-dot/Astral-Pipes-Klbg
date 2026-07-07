@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sharma Pipes & Fittings</title>
+<style>
+  :root {
+    --charcoal: #232a31;
+    --steel: #3d4a58;
+    --steel-light: #64758a;
+    --rust: #c1592f;
+    --rust-dark: #9c4623;
+    --bg: #eceeef;
+    --panel: #ffffff;
+    --line: #d7dbde;
+    --text: #232a31;
+    --text-muted: #5c6773;
+    --ok: #2f7a4f;
+    --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
+    --font-body: "Inter", -apple-system, sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    line-height: 1.5;
+    padding-bottom: 80px; /* Space for floating cart button */
+  }
+
+  /* ============ HEADER ============ */
+  header {
+    background: var(--charcoal);
+    color: #fff;
+    padding: 28px 20px;
+    border-bottom: 6px solid var(--rust);
+  }
+  .header-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .brand-name {
+    font-family: var(--font-display);
+    font-size: 40px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .brand-tag {
+    color: #b8c0c9;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  .status-pill {
+    padding: 6px 14px;
+    border-radius: 3px;
+    font-size: 13px;
+    font-weight: 600;
+    font-family: var(--font-display);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .status-open { background: #234a32; color: #8fe0ab; }
+  .status-closed { background: #4a2323; color: #e08f8f; }
+
+  /* ============ NOTICE BAR ============ */
+  .notice {
+    max-width: 1000px;
+    margin: 16px auto 0;
+    padding: 12px 16px;
+    background: #fff4e9;
+    border-left: 4px solid var(--rust);
+    font-size: 14px;
+    color: var(--rust-dark);
+    display: none;
+  }
+
+  /* ============ CATALOG GRID ============ */
+  main {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 24px 20px 20px;
+  }
+  .section-label {
+    font-family: var(--font-display);
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--steel-light);
+    margin: 24px 0 12px;
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+  .card-img {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    background: #dfe2e4;
+    border-bottom: 3px solid var(--steel);
+  }
+  .card-body {
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .card-name {
+    font-family: var(--font-display);
+    font-size: 20px;
+    font-weight: 600;
+  }
+  .card-spec {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 4px 0 10px;
+  }
+  .card-price {
+    font-weight: 700;
+    color: var(--rust-dark);
+    margin-bottom: 12px;
+  }
+  .btn {
+    border: none;
+    border-radius: 3px;
+    padding: 10px 14px;
+    font-family: var(--font-body);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    margin-top: auto;
+  }
+  .btn-order {
+    background: var(--rust);
+    color: #fff;
+  }
+  .btn-order:hover { background: var(--rust-dark); }
+  .btn-order:disabled {
+    background: #b7bcc1;
+    color: #6b7076;
+    cursor: not-allowed;
+  }
+
+  /* ============ FLOATING CART BAR ============ */
+  .cart-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--charcoal);
+    color: #fff;
+    padding: 16px 20px;
+    display: none;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 -4px 10px rgba(0,0,0,0.15);
+    z-index: 5;
+  }
+  .cart-bar-inner {
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .btn-view-cart {
+    background: var(--rust);
+    color: #fff;
+    padding: 8px 16px;
+  }
+
+  /* ============ MODAL / CART OVERLAY ============ */
+  .overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 24, 28, 0.6);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 10;
+  }
+  .overlay.active { display: flex; }
+  .modal {
+    background: #fff;
+    border-radius: 6px;
+    max-width: 440px;
+    width: 100%;
+    padding: 24px;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+  .modal h3 {
+    font-family: var(--font-display);
+    font-size: 24px;
+    margin-bottom: 12px;
+    border-bottom: 2px solid var(--line);
+    padding-bottom: 6px;
+  }
+  
+  /* Cart Items List Style */
+  .cart-items-list {
+    margin-bottom: 20px;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  .cart-item-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 0;
+    border-bottom: 1px dashed var(--line);
+  }
+  .cart-item-details {
+    flex: 1;
+    margin-right: 10px;
+  }
+  .cart-item-title { font-weight: 600; font-size: 14px; }
+  .cart-item-sub { font-size: 12px; color: var(--text-muted); }
+  .cart-qty-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .btn-qty {
+    background: var(--bg);
+    border: none;
+    width: 26px;
+    height: 26px;
+    font-weight: bold;
+    cursor: pointer;
+    border-radius: 3px;
+  }
+
+  .field { margin-bottom: 14px; }
+  .field label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    color: var(--steel);
+  }
+  .field input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    font-size: 15px;
+    font-family: var(--font-body);
+  }
+  .field input:focus {
+    outline: 2px solid var(--rust);
+    outline-offset: 1px;
+  }
+  .modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 18px;
+  }
+  .btn-cancel {
+    background: var(--bg);
+    color: var(--text);
+    flex: 1;
+  }
+  .btn-submit {
+    background: var(--rust);
+    color: #fff;
+    flex: 2;
+  }
+  .form-msg {
+    font-size: 13px;
+    margin-top: 10px;
+    display: none;
+  }
+  .form-msg.success { color: var(--ok); display: block; }
+  .form-msg.error { color: var(--rust-dark); display: block; }
+
+  footer {
+    text-align: center;
+    padding: 20px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div>
+      <div class="brand-name">Sharma Pipes & Fittings</div>
+      <div class="brand-tag">Quality pipes for home, farm & industrial use</div>
+    </div>
+    <div id="statusPill" class="status-pill">Checking hours...</div>
+  </div>
+</header>
+
+<div id="noticeBar" class="notice">
+  We're currently <strong>closed for new orders</strong>. You can browse the catalog below, but ordering opens again at 10:00 AM.
+</div>
+
+<main>
+  <div class="section-label">Our Products</div>
+  <div class="grid" id="productGrid"></div>
+</main>
+
+<footer>Call us directly for urgent orders. &middot; Sharma Pipes & Fittings</footer>
+
+<div class="cart-bar" id="cartBar">
+  <div class="cart-bar-inner">
+    <div id="cartBarText">0 items selected</div>
+    <button class="btn btn-view-cart" id="viewCartBtn">View Order / Checkout</button>
+  </div>
+</div>
+
+<div class="overlay" id="orderOverlay">
+  <div class="modal">
+    <h3>Your Order Details</h3>
+    
+    <div class="cart-items-list" id="modalCartItems">
+      </div>
+
+    <form id="orderForm">
+      <div class="field">
+        <label for="custName">Your Name</label>
+        <input type="text" id="custName" required>
+      </div>
+      <div class="field">
+        <label for="custPhone">Phone Number</label>
+        <input type="tel" id="custPhone" required>
+      </div>
+      
+      <div class="modal-actions">
+        <button type="button" class="btn btn-cancel" id="cancelBtn">Back</button>
+        <button type="submit" class="btn btn-submit" id="submitBtn">Send Order</button>
+      </div>
+      <div class="form-msg" id="formMsg"></div>
+    </form>
+  </div>
+</div>
+
+<script>
+const PRODUCTS = [
+  {
+    name: "PVC Pipe - 1 inch",
+    spec: "Standard pressure, 3m length",
+    price: "₹180 / piece",
+    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400"
+  },
+  {
+    name: "PVC Pipe - 2 inch",
+    spec: "Standard pressure, 3m length",
+    price: "₹320 / piece",
+    image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400"
+  },
+  {
+    name: "GI Pipe - 1 inch",
+    spec: "Galvanized iron, medium class",
+    price: "₹450 / piece",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400"
+  },
+  {
+    name: "Elbow Joint - 1 inch",
+    spec: "PVC, 90 degree",
+    price: "₹25 / piece",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400"
+  },
+  {
+    name: "Pipe Cap - 1 inch",
+    spec: "PVC end cap",
+    price: "₹15 / piece",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400"
+  },
+  {
+    name: "Tee Joint - 1 inch",
+    spec: "PVC, 3-way",
+    price: "₹30 / piece",
+    image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400"
+  }
+];
+
+const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9h2bDpfp-lpy8Heg6iobTaNX-pHTyIHsY8mZjRTQRlCZYUN6MkD9XALw5TYJ_rDshUQ/exec";
+const OPEN_HOUR = 10;   // 10 AM
+const CLOSE_HOUR = 23;  // 11 PM 
+
+// Global object to track quantities: { productIndex: quantity }
+let cart = {};
+
+function isOrderingOpen() {
+  const hour = new Date().getHours();
+  return hour >= OPEN_HOUR && hour < CLOSE_HOUR;
+}
+
+function renderProducts() {
+  const grid = document.getElementById("productGrid");
+  const open = isOrderingOpen();
+
+  grid.innerHTML = "";
+  PRODUCTS.forEach((p, index) => {
+    const qtyInCart = cart[index] || 0;
+    const card = document.createElement("div");
+    card.className = "card";
+    
+    // Switch between showing an "Add" button vs quantity adjustments on the card
+    let actionButtonHTML = '';
+    if (!open) {
+      actionButtonHTML = `<button class="btn btn-order" disabled>Closed for Orders</button>`;
+    } else if (qtyInCart === 0) {
+      actionButtonHTML = `<button class="btn btn-order add-to-cart-btn" data-index="${index}">Add to Cart</button>`;
+    } else {
+      actionButtonHTML = `
+        <div class="card-qty-actions" style="margin-top: auto; justify-content: space-between; padding-top: 10px;">
+          <button class="btn-qty minus-btn" data-index="${index}">-</button>
+          <span style="font-weight: bold;">${qtyInCart} selected</span>
+          <button class="btn-qty plus-btn" data-index="${index}">+</button>
+        </div>`;
+    }
+
+    card.innerHTML = `
+      <img class="card-img" src="${p.image}" alt="${p.name}">
+      <div class="card-body">
+        <div class="card-name">${p.name}</div>
+        <div class="card-spec">${p.spec}</div>
+        <div class="card-price">${p.price}</div>
+        ${actionButtonHTML}
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  setupCatalogEventListeners();
+  updateCartBar();
+}
+
+function setupCatalogEventListeners() {
+  document.querySelectorAll(".add-to-cart-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = btn.dataset.index;
+      cart[idx] = 1;
+      renderProducts();
+    });
+  });
+
+  document.querySelectorAll(".plus-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = btn.dataset.index;
+      cart[idx] = (cart[idx] || 0) + 1;
+      renderProducts();
+    });
+  });
+
+  document.querySelectorAll(".minus-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = btn.dataset.index;
+      if (cart[idx] > 1) {
+        cart[idx] -= 1;
+      } else {
+        delete cart[idx];
+      }
+      renderProducts();
+    });
+  });
+}
+
+function updateCartBar() {
+  const cartBar = document.getElementById("cartBar");
+  const text = document.getElementById("cartBarText");
+  const totalItems = Object.values(cart).reduce((a, b) => a + b, 0);
+
+  if (totalItems > 0 && isOrderingOpen()) {
+    cartBar.style.display = "flex";
+    text.textContent = `${totalItems} item${totalItems > 1 ? 's' : ''} in your selection`;
+  } else {
+    cartBar.style.display = "none";
+  }
+}
+
+function updateStatusBar() {
+  const pill = document.getElementById("statusPill");
+  const notice = document.getElementById("noticeBar");
+  const open = isOrderingOpen();
+
+  if (open) {
+    pill.textContent = "Open for Orders";
+    pill.className = "status-pill status-open";
+    notice.style.display = "none";
+  } else {
+    pill.textContent = "Closed \u2014 View Only";
+    pill.className = "status-pill status-closed";
+    notice.style.display = "block";
+    cart = {}; // Clear cart if shop closes
+    updateCartBar();
+  }
+}
+
+function openModal() {
+  const listContainer = document.getElementById("modalCartItems");
+  listContainer.innerHTML = "";
+  
+  let hasItems = false;
+  for (const idx in cart) {
+    hasItems = true;
+    const p = PRODUCTS[idx];
+    const row = document.createElement("div");
+    row.className = "cart-item-row";
+    row.innerHTML = `
+      <div class="cart-item-details">
+        <div class="cart-item-title">${p.name}</div>
+        <div class="cart-item-sub">${p.price}</div>
+      </div>
+      <div class="cart-qty-actions">
+        <button type="button" class="btn-qty modal-minus" data-index="${idx}">-</button>
+        <span style="font-weight:600; width:20px; text-align:center;">${cart[idx]}</span>
+        <button type="button" class="btn-qty modal-plus" data-index="${idx}">+</button>
+      </div>
+    `;
+    listContainer.appendChild(row);
+  }
+
+  if(!hasItems) {
+    closeModal();
+    return;
+  }
+
+  // Setup layout modifiers inside the checkout modal
+  document.querySelectorAll(".modal-plus").forEach(btn => {
+    btn.addEventListener("click", () => {
+      cart[btn.dataset.index] += 1;
+      renderProducts();
+      openModal();
+    });
+  });
+  document.querySelectorAll(".modal-minus").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const idx = btn.dataset.index;
+      if (cart[idx] > 1) {
+        cart[idx] -= 1;
+      } else {
+        delete cart[idx];
+      }
+      renderProducts();
+      openModal();
+    });
+  });
+
+  document.getElementById("formMsg").className = "form-msg";
+  document.getElementById("orderOverlay").classList.add("active");
+}
+
+function closeModal() {
+  document.getElementById("orderOverlay").classList.remove("active");
+}
+
+document.getElementById("viewCartBtn").addEventListener("click", openModal);
+document.getElementById("cancelBtn").addEventListener("click", closeModal);
+document.getElementById("orderOverlay").addEventListener("click", (e) => {
+  if (e.target.id === "orderOverlay") closeModal();
+});
+
+document.getElementById("orderForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const submitBtn = document.getElementById("submitBtn");
+  const msg = document.getElementById("formMsg");
+
+  // Format the item layout array into a clear multiline readable string for Telegram/Sheets
+  let itemsSummary = [];
+  for (const idx in cart) {
+    itemsSummary.push(`${PRODUCTS[idx].name} (Qty: ${cart[idx]})`);
+  }
+
+  const payload = {
+    name: document.getElementById("custName").value,
+    phone: document.getElementById("custPhone").value,
+    item: itemsSummary.join(", "), // Combines items: "PVC Pipe - 1 inch (Qty: 2), Elbow Joint (Qty: 5)"
+    quantity: "Multiple" // Kept for legacy backend fields mapping
+  };
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = "Sending...";
+
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      body: JSON.stringify(payload)
+    });
+    msg.textContent = "Order sent successfully! We will reach out shortly.";
+    msg.className = "form-msg success";
+    
+    // Clear everything post successful submission
+    cart = {};
+    renderProducts();
+    setTimeout(closeModal, 1800);
+  } catch (err) {
+    msg.textContent = "Something went wrong. Please try again or call us directly.";
+    msg.className = "form-msg error";
+  } finally {
+    submitBtn.disabled = false;
+    submitBtn.textContent = "Send Order";
+  }
+});
+
+renderProducts();
+updateStatusBar();
+setInterval(() => { renderProducts(); updateStatusBar(); }, 60000);
+</script>
+
+</body>
+</html>
