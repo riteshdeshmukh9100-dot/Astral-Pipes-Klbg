@@ -220,7 +220,7 @@
   /* Cart Items List Style */
   .cart-items-list {
     margin-bottom: 20px;
-    max-height: 200px;
+    max-height: 180px;
     overflow-y: auto;
   }
   .cart-item-row {
@@ -251,6 +251,7 @@
     border-radius: 3px;
   }
 
+  /* Form Fields Formatting */
   .field { margin-bottom: 14px; }
   .field label {
     display: block;
@@ -259,15 +260,16 @@
     margin-bottom: 4px;
     color: var(--steel);
   }
-  .field input {
+  .field input, .field textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid var(--line);
     border-radius: 3px;
     font-size: 15px;
     font-family: var(--font-body);
+    resize: none; /* Disables manual sizing issues on mobile devices */
   }
-  .field input:focus {
+  .field input:focus, .field textarea:focus {
     outline: 2px solid var(--rust);
     outline-offset: 1px;
   }
@@ -336,17 +338,19 @@
   <div class="modal">
     <h3>Your Order Details</h3>
     
-    <div class="cart-items-list" id="modalCartItems">
-      </div>
+    <div class="cart-items-list" id="modalCartItems"></div>
 
     <form id="orderForm">
       <div class="field">
         <label for="custName">Your Name</label>
         <input type="text" id="custName" required>
       </div>
-      <label for="custAdd">Your Adress</label>
-        <input type="text" id="custAdd" required>
+      
+      <div class="field">
+        <label for="custAdd">Your Address</label>
+        <textarea id="custAdd" rows="2" required></textarea>
       </div>
+      
       <div class="field">
         <label for="custPhone">Phone Number</label>
         <input type="tel" id="custPhone" required>
@@ -405,7 +409,6 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9h2bDpfp-lpy8
 const OPEN_HOUR = 10;   // 10 AM
 const CLOSE_HOUR = 23;  // 11 PM 
 
-// Global object to track quantities: { productIndex: quantity }
 let cart = {};
 
 function isOrderingOpen() {
@@ -423,7 +426,6 @@ function renderProducts() {
     const card = document.createElement("div");
     card.className = "card";
     
-    // Switch between showing an "Add" button vs quantity adjustments on the card
     let actionButtonHTML = '';
     if (!open) {
       actionButtonHTML = `<button class="btn btn-order" disabled>Closed for Orders</button>`;
@@ -510,7 +512,7 @@ function updateStatusBar() {
     pill.textContent = "Closed \u2014 View Only";
     pill.className = "status-pill status-closed";
     notice.style.display = "block";
-    cart = {}; // Clear cart if shop closes
+    cart = {};
     updateCartBar();
   }
 }
@@ -544,7 +546,6 @@ function openModal() {
     return;
   }
 
-  // Setup layout modifiers inside the checkout modal
   document.querySelectorAll(".modal-plus").forEach(btn => {
     btn.addEventListener("click", () => {
       cart[btn.dataset.index] += 1;
@@ -584,17 +585,18 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
   const submitBtn = document.getElementById("submitBtn");
   const msg = document.getElementById("formMsg");
 
-  // Format the item layout array into a clear multiline readable string for Telegram/Sheets
   let itemsSummary = [];
   for (const idx in cart) {
     itemsSummary.push(`${PRODUCTS[idx].name} (Qty: ${cart[idx]})`);
   }
 
+  // Included the address extraction dynamically into your transmission payload
   const payload = {
     name: document.getElementById("custName").value,
+    address: document.getElementById("custAdd").value,
     phone: document.getElementById("custPhone").value,
-    item: itemsSummary.join(", "), // Combines items: "PVC Pipe - 1 inch (Qty: 2), Elbow Joint (Qty: 5)"
-    quantity: "Multiple" // Kept for legacy backend fields mapping
+    item: itemsSummary.join(", "),
+    quantity: "Multiple"
   };
 
   submitBtn.disabled = true;
@@ -609,9 +611,9 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
     msg.textContent = "Order sent successfully! We will reach out shortly.";
     msg.className = "form-msg success";
     
-    // Clear everything post successful submission
     cart = {};
     renderProducts();
+    document.getElementById("orderForm").reset();
     setTimeout(closeModal, 1800);
   } catch (err) {
     msg.textContent = "Something went wrong. Please try again or call us directly.";
