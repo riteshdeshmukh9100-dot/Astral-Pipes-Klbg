@@ -28,10 +28,8 @@
     color: var(--text);
     font-family: var(--font-body);
     line-height: 1.5;
-    padding-bottom: 80px; /* Space for floating cart button */
-  }
+    padding-bottom: 80px;
 
-  /* ============ HEADER ============ */
   header {
     background: var(--charcoal);
     color: #fff;
@@ -70,8 +68,7 @@
   }
   .status-open { background: #234a32; color: #8fe0ab; }
   .status-closed { background: #4a2323; color: #e08f8f; }
-
-  /* ============ NOTICE BAR ============ */
+    
   .notice {
     max-width: 1000px;
     margin: 16px auto 0;
@@ -83,7 +80,6 @@
     display: none;
   }
 
-  /* ============ CATALOG GRID ============ */
   main {
     max-width: 1000px;
     margin: 0 auto;
@@ -159,7 +155,6 @@
     cursor: not-allowed;
   }
 
-  /* ============ FLOATING CART BAR ============ */
   .cart-bar {
     position: fixed;
     bottom: 0;
@@ -188,7 +183,6 @@
     padding: 8px 16px;
   }
 
-  /* ============ MODAL / CART OVERLAY ============ */
   .overlay {
     display: none;
     position: fixed;
@@ -216,8 +210,7 @@
     border-bottom: 2px solid var(--line);
     padding-bottom: 6px;
   }
-  
-  /* Cart Items List Style */
+
   .cart-items-list {
     margin-bottom: 20px;
     max-height: 180px;
@@ -251,7 +244,6 @@
     border-radius: 3px;
   }
 
-  /* Form Fields Formatting */
   .field { margin-bottom: 14px; }
   .field label {
     display: block;
@@ -267,7 +259,7 @@
     border-radius: 3px;
     font-size: 15px;
     font-family: var(--font-body);
-    resize: none; /* Disables manual sizing issues on mobile devices */
+    resize: none;
   }
   .field input:focus, .field textarea:focus {
     outline: 2px solid var(--rust);
@@ -309,7 +301,7 @@
 <header>
   <div class="header-inner">
     <div>
-      <div class="brand-name">Sharma Pipes & Fittings</div>
+      <div class="brand-name">Astral Pipes & Fittings</div>
       <div class="brand-tag">Quality pipes for home, farm & industrial use</div>
     </div>
     <div id="statusPill" class="status-pill">Checking hours...</div>
@@ -325,7 +317,7 @@
   <div class="grid" id="productGrid"></div>
 </main>
 
-<footer>Call us directly for urgent orders. &middot; Sharma Pipes & Fittings</footer>
+<footer>Call us directly for urgent orders @+91-7892099915. &middot; Astral Pipes & Fittings</footer>
 
 <div class="cart-bar" id="cartBar">
   <div class="cart-bar-inner">
@@ -412,8 +404,8 @@ const PRODUCTS = [
 ];
 
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9h2bDpfp-lpy8Heg6iobTaNX-pHTyIHsY8mZjRTQRlCZYUN6MkD9XALw5TYJ_rDshUQ/exec";
-const OPEN_HOUR = 9;   // 10 AM
-const CLOSE_HOUR = 22;  // 11 PM 
+const OPEN_HOUR = 9;   
+const CLOSE_HOUR = 22; 
 
 let cart = {};
 
@@ -595,8 +587,7 @@ document.getElementById("orderForm").addEventListener("submit", async (e) => {
   for (const idx in cart) {
     itemsSummary.push(`${PRODUCTS[idx].name} (Qty: ${cart[idx]})`);
   }
-
-  // Included the address extraction dynamically into your transmission payload
+  
   const payload = {
     name: document.getElementById("custName").value,
     address: document.getElementById("custAdd").value,
