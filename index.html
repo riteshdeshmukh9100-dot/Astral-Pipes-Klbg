@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sharma Pipes & Fittings</title>
-<!-- NEW: Added html2pdf library for PDF generation -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
 <style>
@@ -26,44 +25,17 @@
 
   * { box-sizing: border-box; margin: 0; padding: 0; }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--font-body);
-    line-height: 1.5;
-    padding-bottom: 80px; 
-  }
-
-  header {
-    background: var(--charcoal);
-    color: #fff;
-    padding: 28px 20px;
-    border-bottom: 6px solid var(--rust);
-  }
-  .header-inner {
-    max-width: 1000px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-    gap: 12px;
-  }
+  body { background: var(--bg); color: var(--text); font-family: var(--font-body); line-height: 1.5; padding-bottom: 80px; }
+  header { background: var(--charcoal); color: #fff; padding: 28px 20px; border-bottom: 6px solid var(--rust); }
+  .header-inner { max-width: 1000px; margin: 0 auto; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 12px; }
   .brand-name { font-family: var(--font-display); font-size: 40px; font-weight: 700; text-transform: uppercase; }
   .brand-tag { color: #b8c0c9; font-size: 14px; margin-top: 2px; }
   
-  .status-pill {
-    padding: 6px 14px; border-radius: 3px; font-size: 13px; font-weight: 600;
-    font-family: var(--font-display); text-transform: uppercase;
-  }
+  .status-pill { padding: 6px 14px; border-radius: 3px; font-size: 13px; font-weight: 600; font-family: var(--font-display); text-transform: uppercase; }
   .status-open { background: #234a32; color: #8fe0ab; }
   .status-closed { background: #4a2323; color: #e08f8f; }
 
-  .notice {
-    max-width: 1000px; margin: 16px auto 0; padding: 12px 16px; background: #fff4e9;
-    border-left: 4px solid var(--rust); font-size: 14px; color: var(--rust-dark); display: none;
-  }
-
+  .notice { max-width: 1000px; margin: 16px auto 0; padding: 12px 16px; background: #fff4e9; border-left: 4px solid var(--rust); font-size: 14px; color: var(--rust-dark); display: none; }
   main { max-width: 1000px; margin: 0 auto; padding: 24px 20px 20px; }
   .section-label { font-family: var(--font-display); font-size: 13px; text-transform: uppercase; letter-spacing: 2px; color: var(--steel-light); margin: 24px 0 12px; }
   
@@ -80,20 +52,13 @@
   .btn-order:hover { background: var(--rust-dark); }
   .btn-order:disabled { background: #b7bcc1; color: #6b7076; cursor: not-allowed; }
 
-  .cart-bar {
-    position: fixed; bottom: 0; left: 0; right: 0; background: var(--charcoal); color: #fff;
-    padding: 16px 20px; display: none; justify-content: space-between; align-items: center;
-    box-shadow: 0 -4px 10px rgba(0,0,0,0.15); z-index: 5;
-  }
+  .cart-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--charcoal); color: #fff; padding: 16px 20px; display: none; justify-content: space-between; align-items: center; box-shadow: 0 -4px 10px rgba(0,0,0,0.15); z-index: 5; }
   .cart-bar-inner { max-width: 1000px; margin: 0 auto; width: 100%; display: flex; justify-content: space-between; align-items: center; }
   .btn-view-cart { background: var(--rust); color: #fff; padding: 8px 16px; }
 
-  .overlay {
-    display: none; position: fixed; inset: 0; background: rgba(20, 24, 28, 0.6);
-    align-items: center; justify-content: center; padding: 16px; z-index: 10;
-  }
+  .overlay { display: none; position: fixed; inset: 0; background: rgba(20, 24, 28, 0.6); align-items: center; justify-content: center; padding: 16px; z-index: 10; }
   .overlay.active { display: flex; }
-  .modal { background: #fff; border-radius: 6px; max-width: 440px; width: 100%; padding: 24px; max-height: 90vh; overflow-y: auto; }
+  .modal { background: #fff; border-radius: 6px; max-width: 850px; width: 100%; padding: 24px; max-height: 95vh; overflow-y: auto; }
   .modal h3 { font-family: var(--font-display); font-size: 24px; margin-bottom: 12px; border-bottom: 2px solid var(--line); padding-bottom: 6px; }
   
   .cart-items-list { margin-bottom: 20px; max-height: 200px; overflow-y: auto; }
@@ -103,14 +68,12 @@
   .cart-item-sub { font-size: 12px; color: var(--text-muted); }
   .cart-qty-actions { display: flex; align-items: center; gap: 8px; margin-right: 10px;}
   .btn-qty { background: var(--bg); border: none; width: 26px; height: 26px; font-weight: bold; cursor: pointer; border-radius: 3px; }
-  .item-total-price { font-weight: 600; font-size: 14px; width: 60px; text-align: right; color: var(--rust-dark); }
   
-  .bill-grand-total { display: flex; justify-content: space-between; padding-top: 12px; border-top: 2px solid var(--charcoal); font-weight: 700; font-size: 18px; color: var(--charcoal); }
-
   .field { margin-bottom: 14px; }
   .field label { display: block; font-size: 13px; font-weight: 600; margin-bottom: 4px; color: var(--steel); }
   .field input, .field textarea { width: 100%; padding: 10px; border: 1px solid var(--line); border-radius: 3px; font-size: 15px; font-family: var(--font-body); resize: none; }
   .field input:focus, .field textarea:focus { outline: 2px solid var(--rust); outline-offset: 1px; }
+  .field input:read-only, .field textarea:read-only { background: #f4f6f8; color: #8e99a4; cursor: not-allowed; }
   
   .modal-actions { display: flex; gap: 10px; margin-top: 18px; }
   .btn-cancel { background: var(--bg); color: var(--text); flex: 1; }
@@ -120,7 +83,14 @@
   .form-msg { font-size: 13px; margin-top: 10px; display: none; }
   .form-msg.error { color: var(--rust-dark); display: block; }
 
-  footer { text-align: center; padding: 20px; font-size: 12px; color: var(--text-muted); }
+  /* Invoice Print Styles */
+  .inv-table { width: 100%; border-collapse: collapse; margin-bottom: 10px; font-size: 12px; }
+  .inv-table th, .inv-table td { border: 1px solid #000; padding: 6px; text-align: center; }
+  .inv-table th { background-color: #f2f2f2; font-weight: bold; }
+  .inv-table .text-left { text-align: left; }
+  .inv-table .text-right { text-align: right; }
+  .no-border-bottom { border-bottom: none !important; }
+  .no-border-top { border-top: none !important; }
 </style>
 </head>
 <body>
@@ -129,7 +99,7 @@
   <div class="header-inner">
     <div>
       <div class="brand-name">Sharma Pipes & Fittings</div>
-      <div class="brand-tag">Quality pipes for home, farm & industrial use</div>
+      <div class="brand-tag">B2B Quality pipes for farm & industrial use</div>
     </div>
     <div id="statusPill" class="status-pill">Checking hours...</div>
   </div>
@@ -144,8 +114,6 @@
   <div class="grid" id="productGrid"></div>
 </main>
 
-<footer>Call us directly for urgent orders. &middot; Sharma Pipes & Fittings</footer>
-
 <div class="cart-bar" id="cartBar">
   <div class="cart-bar-inner">
     <div id="cartBarText">0 items selected</div>
@@ -154,25 +122,36 @@
 </div>
 
 <div class="overlay" id="orderOverlay">
-  <div class="modal" id="modalContentWrapper">
-    <h3>Your Order Details</h3>
+  <div class="modal" id="modalContentWrapper" style="max-width: 440px;">
+    <h3>Business Checkout</h3>
     <div class="cart-items-list" id="modalCartItems"></div>
     <form id="orderForm">
+      
       <div class="field">
-        <label for="custName">Your Name</label>
-        <input type="text" id="custName" required>
+        <label for="custGst">Company GSTIN Number <span style="color:red;">*</span></label>
+        <div style="display: flex; gap: 8px;">
+          <input type="text" id="custGst" maxlength="15" style="text-transform: uppercase;" placeholder="e.g. 29ABCDE1234F1Z5" required>
+          <button type="button" class="btn btn-pdf" id="verifyGstBtn" style="padding: 10px;">Verify</button>
+        </div>
+        <div id="gstMsg" style="font-size: 12px; margin-top: 6px; font-weight: 600;"></div>
+      </div>
+
+      <div class="field">
+        <label for="custName">Company Name</label>
+        <input type="text" id="custName" placeholder="Authenticating GSTIN..." readonly required>
       </div>
       <div class="field">
-        <label for="custAdd">Your Address</label>
-        <textarea id="custAdd" rows="2" required></textarea>
+        <label for="custAdd">Billing Address</label>
+        <textarea id="custAdd" rows="2" placeholder="Authenticating GSTIN..." readonly required></textarea>
       </div>
       <div class="field">
-        <label for="custPhone">Phone Number</label>
+        <label for="custPhone">Contact Phone</label>
         <input type="tel" id="custPhone" required>
       </div>
+      
       <div class="modal-actions">
         <button type="button" class="btn btn-cancel" id="cancelBtn">Back</button>
-        <button type="submit" class="btn btn-submit" id="submitBtn">Place Order</button>
+        <button type="submit" class="btn btn-submit" id="submitBtn" disabled>Place Order</button>
       </div>
       <div class="form-msg" id="formMsg"></div>
     </form>
@@ -181,251 +160,257 @@
 
 <script>
 const PRODUCTS = [
-  { name: "PVC Pipe - 1 inch", spec: "Standard pressure, 3m length", price: "₹180 / piece", numericPrice: 180, image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400" },
-  { name: "PVC Pipe - 2 inch", spec: "Standard pressure, 3m length", price: "₹320 / piece", numericPrice: 320, image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400" },
-  { name: "GI Pipe - 1 inch", spec: "Galvanized iron, medium class", price: "₹450 / piece", numericPrice: 450, image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400" },
-  { name: "Elbow Joint - 1 inch", spec: "PVC, 90 degree", price: "₹25 / piece", numericPrice: 25, image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400" },
-  { name: "Pipe Cap - 1 inch", spec: "PVC end cap", price: "₹15 / piece", numericPrice: 15, image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400" },
-  { name: "Tee Joint - 1 inch", spec: "PVC, 3-way", price: "₹30 / piece", numericPrice: 30, image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400" }
+  { name: "PVC Pipe - 1 inch", spec: "Standard pressure, 3m length", price: "₹180 / piece", numericPrice: 180, hsn: "39172390", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400" },
+  { name: "PVC Pipe - 2 inch", spec: "Standard pressure, 3m length", price: "₹320 / piece", numericPrice: 320, hsn: "39172390", image: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400" },
+  { name: "GI Pipe - 1 inch", spec: "Galvanized iron, medium class", price: "₹450 / piece", numericPrice: 450, hsn: "73063010", image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400" },
+  { name: "Elbow Joint - 1 inch", spec: "PVC, 90 degree", price: "₹25 / piece", numericPrice: 25, hsn: "39174000", image: "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=400" }
 ];
 
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9h2bDpfp-lpy8Heg6iobTaNX-pHTyIHsY8mZjRTQRlCZYUN6MkD9XALw5TYJ_rDshUQ/exec";
-const OPEN_HOUR = 10;
-const CLOSE_HOUR = 23; 
+const OPEN_HOUR = 10; const CLOSE_HOUR = 23; 
+const API_KEY = "48071a846133b94c972cdbc19812c62d"; // YOUR REAL API KEY
 
-let cart = {};
-let currentOrderGrandTotal = 0; 
-let currentOrderDate = "";
+let cart = {}; let currentOrderGrandTotal = 0; 
 
-function isOrderingOpen() {
-  const hour = new Date().getHours();
-  return hour >= OPEN_HOUR && hour < CLOSE_HOUR;
-}
+function isOrderingOpen() { return new Date().getHours() >= OPEN_HOUR && new Date().getHours() < CLOSE_HOUR; }
 
 function renderProducts() {
-  const grid = document.getElementById("productGrid");
-  const open = isOrderingOpen();
-  grid.innerHTML = "";
-
+  const grid = document.getElementById("productGrid"); const open = isOrderingOpen(); grid.innerHTML = "";
   PRODUCTS.forEach((p, index) => {
-    const qtyInCart = cart[index] || 0;
-    const card = document.createElement("div");
-    card.className = "card";
-    
+    const qtyInCart = cart[index] || 0; const card = document.createElement("div"); card.className = "card";
     let actionButtonHTML = '';
-    if (!open) {
-      actionButtonHTML = `<button class="btn btn-order" disabled>Closed for Orders</button>`;
-    } else if (qtyInCart === 0) {
-      actionButtonHTML = `<button class="btn btn-order add-to-cart-btn" data-index="${index}">Add to Cart</button>`;
-    } else {
-      actionButtonHTML = `
-        <div class="card-qty-actions" style="margin-top: auto; justify-content: space-between; padding-top: 10px;">
-          <button class="btn-qty minus-btn" data-index="${index}">-</button>
-          <span style="font-weight: bold;">${qtyInCart} selected</span>
-          <button class="btn-qty plus-btn" data-index="${index}">+</button>
-        </div>`;
-    }
-
-    card.innerHTML = `
-      <img class="card-img" src="${p.image}" alt="${p.name}">
-      <div class="card-body">
-        <div class="card-name">${p.name}</div>
-        <div class="card-spec">${p.spec}</div>
-        <div class="card-price">${p.price}</div>
-        ${actionButtonHTML}
-      </div>
-    `;
+    if (!open) actionButtonHTML = `<button class="btn btn-order" disabled>Closed for Orders</button>`;
+    else if (qtyInCart === 0) actionButtonHTML = `<button class="btn btn-order add-to-cart-btn" data-index="${index}">Add to Cart</button>`;
+    else actionButtonHTML = `<div class="card-qty-actions" style="margin-top: auto; justify-content: space-between; padding-top: 10px;"><button class="btn-qty minus-btn" data-index="${index}">-</button><span style="font-weight: bold;">${qtyInCart} selected</span><button class="btn-qty plus-btn" data-index="${index}">+</button></div>`;
+    card.innerHTML = `<img class="card-img" src="${p.image}" alt="${p.name}"><div class="card-body"><div class="card-name">${p.name}</div><div class="card-spec">${p.spec}</div><div class="card-price">${p.price}</div>${actionButtonHTML}</div>`;
     grid.appendChild(card);
   });
-  setupCatalogEventListeners();
-  updateCartBar();
+  setupCatalogEventListeners(); updateCartBar();
 }
 
 function setupCatalogEventListeners() {
-  document.querySelectorAll(".add-to-cart-btn").forEach(btn => {
-    btn.addEventListener("click", () => { cart[btn.dataset.index] = 1; renderProducts(); });
-  });
-  document.querySelectorAll(".plus-btn").forEach(btn => {
-    btn.addEventListener("click", () => { cart[btn.dataset.index] = (cart[btn.dataset.index] || 0) + 1; renderProducts(); });
-  });
-  document.querySelectorAll(".minus-btn").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const idx = btn.dataset.index;
-      if (cart[idx] > 1) cart[idx] -= 1; else delete cart[idx];
-      renderProducts();
-    });
-  });
+  document.querySelectorAll(".add-to-cart-btn").forEach(btn => btn.addEventListener("click", () => { cart[btn.dataset.index] = 1; renderProducts(); }));
+  document.querySelectorAll(".plus-btn").forEach(btn => btn.addEventListener("click", () => { cart[btn.dataset.index] = (cart[btn.dataset.index] || 0) + 1; renderProducts(); }));
+  document.querySelectorAll(".minus-btn").forEach(btn => btn.addEventListener("click", () => { const idx = btn.dataset.index; if (cart[idx] > 1) cart[idx] -= 1; else delete cart[idx]; renderProducts(); }));
 }
 
 function updateCartBar() {
-  const cartBar = document.getElementById("cartBar");
-  const text = document.getElementById("cartBarText");
+  const cartBar = document.getElementById("cartBar"); const text = document.getElementById("cartBarText");
   let totalItems = 0; let runningTotal = 0;
-  
-  for (const idx in cart) { totalItems += cart[idx]; runningTotal += (cart[idx] * PRODUCTS[idx].numericPrice); }
-
-  if (totalItems > 0 && isOrderingOpen()) {
-    cartBar.style.display = "flex"; text.textContent = `${totalItems} items selected  •  Total: ₹${runningTotal}`;
-  } else {
-    cartBar.style.display = "none";
-  }
+  for (const idx in cart) { totalItems += cart[idx]; runningTotal += (cart[idx] * PRODUCTS[idx].numericPrice) * 1.18; }
+  if (totalItems > 0 && isOrderingOpen()) { cartBar.style.display = "flex"; text.textContent = `${totalItems} items selected  •  Est. Total: ₹${runningTotal.toFixed(2)}`; }
+  else { cartBar.style.display = "none"; }
 }
 
 function updateStatusBar() {
   const pill = document.getElementById("statusPill"); const notice = document.getElementById("noticeBar"); const open = isOrderingOpen();
-  if (open) { pill.textContent = "Open for Orders"; pill.className = "status-pill status-open"; notice.style.display = "none";
-  } else { pill.textContent = "Closed \u2014 View Only"; pill.className = "status-pill status-closed"; notice.style.display = "block"; cart = {}; updateCartBar(); }
+  if (open) { pill.textContent = "Open for Orders"; pill.className = "status-pill status-open"; notice.style.display = "none"; }
+  else { pill.textContent = "Closed \u2014 View Only"; pill.className = "status-pill status-closed"; notice.style.display = "block"; cart = {}; updateCartBar(); }
 }
 
 function openModal() {
-  const listContainer = document.getElementById("modalCartItems");
-  listContainer.innerHTML = "";
-  let hasItems = false; currentOrderGrandTotal = 0; 
-  
+  const listContainer = document.getElementById("modalCartItems"); listContainer.innerHTML = "";
+  let hasItems = false; currentOrderGrandTotal = 0; let preTaxSubTotal = 0;
   for (const idx in cart) {
-    hasItems = true; const p = PRODUCTS[idx]; const qty = cart[idx]; const lineTotal = p.numericPrice * qty;
-    currentOrderGrandTotal += lineTotal;
+    hasItems = true; const p = PRODUCTS[idx]; const qty = cart[idx]; preTaxSubTotal += p.numericPrice * qty;
     const row = document.createElement("div"); row.className = "cart-item-row";
-    row.innerHTML = `
-      <div class="cart-item-details">
-        <div class="cart-item-title">${p.name}</div>
-        <div class="cart-item-sub">${p.price}</div>
-      </div>
-      <div class="cart-qty-actions">
-        <button type="button" class="btn-qty modal-minus" data-index="${idx}">-</button>
-        <span style="font-weight:600; width:20px; text-align:center;">${qty}</span>
-        <button type="button" class="btn-qty modal-plus" data-index="${idx}">+</button>
-      </div>
-      <div class="item-total-price">₹${lineTotal}</div>
-    `;
+    row.innerHTML = `<div class="cart-item-details"><div class="cart-item-title">${p.name}</div><div class="cart-item-sub">Base: ₹${p.numericPrice} | Qty: ${qty}</div></div><div class="cart-qty-actions"><button type="button" class="btn-qty modal-minus" data-index="${idx}">-</button><span style="font-weight:600; width:20px; text-align:center;">${qty}</span><button type="button" class="btn-qty modal-plus" data-index="${idx}">+</button></div>`;
     listContainer.appendChild(row);
   }
-
   if(!hasItems) { closeModal(); return; }
-
-  const totalRow = document.createElement("div"); totalRow.className = "bill-grand-total";
-  totalRow.innerHTML = `<span>Grand Total:</span><span>₹${currentOrderGrandTotal}</span>`;
-  listContainer.appendChild(totalRow);
-
-  document.querySelectorAll(".modal-plus").forEach(btn => { btn.addEventListener("click", () => { cart[btn.dataset.index] += 1; renderProducts(); openModal(); }); });
-  document.querySelectorAll(".modal-minus").forEach(btn => { btn.addEventListener("click", () => { const idx = btn.dataset.index; if (cart[idx] > 1) cart[idx] -= 1; else delete cart[idx]; renderProducts(); openModal(); }); });
-
-  document.getElementById("formMsg").className = "form-msg";
+  currentOrderGrandTotal = preTaxSubTotal + (preTaxSubTotal * 0.18);
+  document.querySelectorAll(".modal-plus").forEach(btn => btn.addEventListener("click", () => { cart[btn.dataset.index] += 1; renderProducts(); openModal(); }));
+  document.querySelectorAll(".modal-minus").forEach(btn => btn.addEventListener("click", () => { const idx = btn.dataset.index; if (cart[idx] > 1) cart[idx] -= 1; else delete cart[idx]; renderProducts(); openModal(); }));
+  
+  document.getElementById("formMsg").className = "form-msg"; 
   document.getElementById("orderOverlay").classList.add("active");
 }
 
 function closeModal() { document.getElementById("orderOverlay").classList.remove("active"); }
-
 document.getElementById("viewCartBtn").addEventListener("click", openModal);
 document.getElementById("cancelBtn").addEventListener("click", closeModal);
 document.getElementById("orderOverlay").addEventListener("click", (e) => { if (e.target.id === "orderOverlay") closeModal(); });
 
-// New function to trigger PDF Download
-function downloadPDF() {
-  const element = document.getElementById('printableBill');
-  const opt = {
-    margin:       0.3,
-    filename:     'SharmaPipes_Invoice.pdf',
-    image:        { type: 'jpeg', quality: 0.98 },
-    html2canvas:  { scale: 2 },
-    jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
-  };
+/* =========================================
+   REAL GSTIN API VERIFICATION LOGIC (CORS FIXED)
+========================================= */
+document.getElementById('verifyGstBtn').addEventListener('click', () => {
+  const gstInput = document.getElementById('custGst').value.trim().toUpperCase();
+  const gstMsg = document.getElementById('gstMsg');
+  const nameField = document.getElementById('custName');
+  const addField = document.getElementById('custAdd');
+  const submitBtn = document.getElementById('submitBtn');
   
-  // Temporarily hide border for cleaner PDF print
-  element.style.border = "none";
-  
-  html2pdf().set(opt).from(element).save().then(() => {
-    element.style.border = "1px solid #d7dbde"; // Restore border after print
-  });
+  const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+  if (!gstRegex.test(gstInput)) {
+    gstMsg.textContent = "❌ Invalid GSTIN format."; gstMsg.style.color = "var(--rust-dark)"; submitBtn.disabled = true; return;
+  }
+
+  gstMsg.textContent = "⏳ Verifying & connecting to portal...";
+  gstMsg.style.color = "#d97706"; 
+
+  // CORS Proxy bridge to fetch data safely
+  const targetApiUrl = `https://gstincheck.co.in/api/v1/verify?apikey=${API_KEY}&gstin=${gstInput}`;
+  const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetApiUrl)}`;
+
+  fetch(proxyUrl)
+    .then(res => {
+      if (!res.ok) throw new Error("Network response was not ok");
+      return res.json();
+    })
+    .then(data => {
+      if (data && (data.flag === true || data.data)) {
+        
+        const gstData = data.data || data; 
+        
+        gstMsg.textContent = "✅ GSTIN Verified Successfully!";
+        gstMsg.style.color = "var(--ok)";
+        nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
+        
+        // Extract Name
+        nameField.value = gstData.tradeNam || gstData.trade_name || gstData.lgnm || gstData.legal_name || "";
+        
+        // Extract Address
+        const pradr = gstData.pradr || gstData.principal_address;
+        if (pradr) {
+          if (typeof pradr === 'object' && pradr.addr) {
+            addField.value = `${pradr.addr.bno || ''} ${pradr.addr.st || ''} ${pradr.addr.loc || ''}, ${pradr.addr.dst || ''} - ${pradr.addr.pncd || ''}`.trim();
+          } else if (pradr.adr) {
+            addField.value = `${pradr.adr} - ${pradr.pncd || ''}`;
+          } else {
+            addField.value = "Address found. Please verify/edit manually.";
+          }
+        }
+      } else {
+        gstMsg.textContent = "⚠️ GSTIN not active or found. Please type manually.";
+        gstMsg.style.color = "var(--rust-dark)";
+        nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
+        nameField.value = ""; addField.value = ""; nameField.placeholder = "Enter Company Name"; addField.placeholder = "Enter Billing Address";
+      }
+    })
+    .catch(err => {
+      gstMsg.textContent = "⚠️ Portal connection blocked. Please type details manually.";
+      gstMsg.style.color = "#d97706";
+      nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
+      nameField.value = ""; addField.value = ""; nameField.placeholder = "Enter Company Name"; addField.placeholder = "Enter Billing Address";
+    });
+});
+
+function numberToWords(num) {
+    const a = ['','One ','Two ','Three ','Four ', 'Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
+    const b = ['', '', 'Twenty','Thirty','Forty','Fifty', 'Sixty','Seventy','Eighty','Ninety'];
+    if ((num = num.toString()).length > 9) return 'Overflow';
+    let n = ('000000000' + num).substr(-9).match(/^(\d{2})(\d{2})(\d{2})(\d{1})(\d{2})$/);
+    if (!n) return; let str = '';
+    str += (n[1] != 0) ? (a[Number(n[1])] || b[n[1][0]] + ' ' + a[n[1][1]]) + 'Crore ' : '';
+    str += (n[2] != 0) ? (a[Number(n[2])] || b[n[2][0]] + ' ' + a[n[2][1]]) + 'Lakh ' : '';
+    str += (n[3] != 0) ? (a[Number(n[3])] || b[n[3][0]] + ' ' + a[n[3][1]]) + 'Thousand ' : '';
+    str += (n[4] != 0) ? (a[Number(n[4])] || b[n[4][0]] + ' ' + a[n[4][1]]) + 'Hundred ' : '';
+    str += (n[5] != 0) ? ((str != '') ? 'and ' : '') + (a[Number(n[5])] || b[n[5][0]] + ' ' + a[n[5][1]]) + 'Rupees Only' : 'Rupees Only';
+    return str;
 }
 
+function downloadPDF() {
+  const element = document.getElementById('printableBill');
+  const opt = { margin: 0.2, filename: 'SharmaPipes_TaxInvoice.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+  html2pdf().set(opt).from(element).save();
+}
+
+/* =========================================
+   PDF GENERATION BUG FIX (Screen Render First)
+========================================= */
 document.getElementById("orderForm").addEventListener("submit", async (e) => {
   e.preventDefault();
   const submitBtn = document.getElementById("submitBtn");
-  const msg = document.getElementById("formMsg");
   const wrapper = document.getElementById("modalContentWrapper"); 
 
-  let itemsSummary = [];
-  let receiptItemsList = [];
-  
+  let itemsSummary = []; let invoiceRowsHTML = ""; let preTaxSubTotal = 0; let itemCount = 1;
   for (const idx in cart) {
-    const p = PRODUCTS[idx]; const qty = cart[idx];
-    itemsSummary.push(`- ${p.name} (Qty: ${qty}) = ₹${p.numericPrice * qty}`);
-    // Inline styling used for PDF generation safety
-    receiptItemsList.push(`<div style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px; color:#232a31;"><span>${qty}x ${p.name}</span><span style="font-weight:600;">₹${p.numericPrice * qty}</span></div>`);
+    const p = PRODUCTS[idx]; const qty = cart[idx]; const basePrice = p.numericPrice; const lineSubTotal = basePrice * qty; const lineAmountWithGST = lineSubTotal * 1.18;
+    preTaxSubTotal += lineSubTotal; itemsSummary.push(`- ${p.name} (Qty: ${qty})`);
+    invoiceRowsHTML += `<tr><td>${itemCount}</td><td class="text-left" style="font-weight:bold;">${p.name}</td><td>${p.hsn}</td><td>${basePrice.toFixed(2)}</td><td>${qty}</td><td>Pcs</td><td>${basePrice.toFixed(2)}</td><td>18%</td><td class="text-right">${lineAmountWithGST.toFixed(2)}</td></tr>`;
+    itemCount++;
   }
 
-  const custName = document.getElementById("custName").value;
-  const custAdd = document.getElementById("custAdd").value;
+  let cgst = preTaxSubTotal * 0.09; let sgst = preTaxSubTotal * 0.09; let grandTotal = preTaxSubTotal + cgst + sgst;
+  const custGst = document.getElementById("custGst").value.toUpperCase();
+  const custName = document.getElementById("custName").value; 
+  const custAdd = document.getElementById("custAdd").value; 
   const custPhone = document.getElementById("custPhone").value;
-  
-  // Format today's date for the bill
-  const today = new Date();
-  const dateString = today.toLocaleDateString('en-IN', { year: 'numeric', month: 'short', day: 'numeric' });
+  const dateString = new Date().toLocaleDateString('en-IN', { year: 'numeric', month: '2-digit', day: '2-digit' }).replace(/\//g, '-');
+  const randomInvoiceNo = Math.floor(100000 + Math.random() * 900000);
 
-  const payload = {
-    name: custName, address: custAdd, phone: custPhone,
-    item: itemsSummary.join("\n"), quantity: "Multiple", grandTotal: currentOrderGrandTotal
-  };
+  submitBtn.disabled = true; submitBtn.textContent = "Processing Invoice...";
 
-  submitBtn.disabled = true;
-  submitBtn.textContent = "Processing...";
+  const invoiceHTML = `
+    <div style="text-align: center; margin-bottom: 10px;"><h3 style="margin-bottom: 5px; color: #2f7a4f;">✓ Order Confirmed</h3></div>
+    <div id="printableBill" style="background: #ffffff; padding: 20px; color: #000; font-family: Arial, sans-serif; box-sizing: border-box;">
+      <div style="text-align: center; font-weight: bold; font-size: 16px; margin-bottom: 15px;">Tax Invoice</div>
+      <div style="display: flex; justify-content: space-between; border: 1px solid #000; border-bottom: none;">
+        <div style="width: 50%; padding: 10px; border-right: 1px solid #000;">
+          <div style="font-weight:bold; margin-bottom:5px;">Bill To</div>
+          <div style="font-weight:bold; font-size: 14px;">${custName}</div>
+          <div style="font-size: 12px;">${custAdd}<br>Contact No : ${custPhone}<br><b>GSTIN : ${custGst}</b><br>State : ${custGst.substring(0,2)}</div>
+        </div>
+        <div style="width: 50%; padding: 10px; font-size: 12px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div><h2 style="margin: 0 0 5px 0; font-size: 18px;">SHARMA PIPES & FITTINGS</h2>Shop No. 1, Main Road, Kalaburagi<br>Phone no. : 9876543210<br>GSTIN : 29XXXXX0000X1ZX<br>State: 29-Karnataka</div>
+          <div style="margin-top: 10px;">Invoice No. : <b>${randomInvoiceNo}</b><br>Date : <b>${dateString}</b><br>Place of supply : 29-Karnataka<br>BILL TYPE : Credit</div>
+        </div>
+      </div>
+      <table class="inv-table" style="margin-bottom:0;">
+        <thead><tr><th style="width: 3%;">#</th><th style="width: 30%;">Item name</th><th style="width: 10%;">HSN/SAC</th><th style="width: 8%;">MRP</th><th style="width: 8%;">Quantity</th><th style="width: 8%;">Unit</th><th style="width: 8%;">Disc price</th><th style="width: 5%;">GST</th><th style="width: 15%;">Amount</th></tr></thead>
+        <tbody>${invoiceRowsHTML}</tbody>
+      </table>
+      <table class="inv-table" style="border-top: none;">
+        <tbody><tr>
+          <td colspan="4" class="text-left no-border-top no-border-bottom" style="width: 60%; vertical-align: top; padding: 10px;">
+            <div style="font-weight:bold; margin-bottom: 5px;">Invoice Amount In Words</div><div style="margin-bottom: 15px;">${numberToWords(Math.round(grandTotal))}</div>
+            <div style="font-weight:bold; margin-bottom: 5px;">Terms and Conditions</div>
+            <ol style="margin: 0; padding-left: 15px; font-size: 10px; line-height: 1.3;">
+              <li>Responsibility ceases as soon as the goods are delivered.</li>
+              <li>Transactions are strictly subject to Kalaburagi jurisdiction.</li>
+              <li>Goods once sold will not be taken back unless defective.</li>
+            </ol>
+            <div style="margin-top: 15px;"><b>Bank Details:</b><br>Bank Name : STATE BANK OF INDIA<br>Bank A/C No. : 12345678901<br>IFSC : SBIN0020717<br>Name : SHARMA PIPES & FITTINGS</div>
+          </td>
+          <td colspan="5" class="no-border-top" style="width: 40%; vertical-align: bottom; padding: 0;">
+            <table style="width: 100%; border-collapse: collapse; font-size: 12px; height: 100%;">
+              <tr><td class="text-left" style="border-bottom: 1px solid #000; padding: 6px;">Sub Total</td><td class="text-right" style="border-bottom: 1px solid #000; border-left: 1px solid #000; padding: 6px;">₹ ${preTaxSubTotal.toFixed(2)}</td></tr>
+              <tr><td class="text-left" style="border-bottom: 1px solid #000; padding: 6px;">SGST@9%</td><td class="text-right" style="border-bottom: 1px solid #000; border-left: 1px solid #000; padding: 6px;">₹ ${sgst.toFixed(2)}</td></tr>
+              <tr><td class="text-left" style="border-bottom: 1px solid #000; padding: 6px;">CGST@9%</td><td class="text-right" style="border-bottom: 1px solid #000; border-left: 1px solid #000; padding: 6px;">₹ ${cgst.toFixed(2)}</td></tr>
+              <tr><td class="text-left" style="border-bottom: 1px solid #000; padding: 6px; font-weight:bold; background: #f2f2f2;">Total</td><td class="text-right" style="border-bottom: 1px solid #000; border-left: 1px solid #000; padding: 6px; font-weight:bold; background: #f2f2f2;">₹ ${grandTotal.toFixed(2)}</td></tr>
+              <tr><td colspan="2" style="border-top: 1px solid #000; padding: 10px; text-align: center; vertical-align: bottom; height: 80px;"><div style="font-weight: bold; margin-bottom: 30px;">For SHARMA PIPES & FITTINGS</div><div>Authorized Signatory</div></td></tr>
+            </table>
+          </td>
+        </tr></tbody>
+      </table>
+    </div>
+    <div class="modal-actions" style="margin-top: 10px;">
+      <button class="btn btn-pdf" onclick="downloadPDF()">Download PDF Invoice</button>
+      <button class="btn btn-submit" onclick="window.location.reload();">Close Shop</button>
+    </div>
+  `;
 
-  try {
-    await fetch(APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
+  wrapper.style.maxWidth = "850px";
+  wrapper.innerHTML = invoiceHTML;
+
+  const visibleReceiptElement = document.getElementById('printableBill');
+  const opt = { margin: 0.2, filename: 'Invoice.pdf', image: { type: 'jpeg', quality: 0.98 }, html2canvas: { scale: 2 }, jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' } };
+
+  html2pdf().set(opt).from(visibleReceiptElement).outputPdf('datauristring').then(async function(pdfAsString) {
+    const base64Data = pdfAsString.split(',')[1];
+    const payload = {
+      gstin: custGst, name: custName, address: custAdd, phone: custPhone,
+      item: itemsSummary.join("\n"), quantity: "Multiple", grandTotal: grandTotal.toFixed(2),
+      pdfBase64: base64Data 
+    };
     
-    // Replace modal form with the Printable Bill and Download Button
-    wrapper.innerHTML = `
-      <div style="text-align: center; margin-bottom: 20px;">
-        <div style="font-size: 40px; color: #2f7a4f; line-height: 1;">✓</div>
-        <h3 style="margin-bottom: 5px;">Order Confirmed</h3>
-      </div>
-      
-      <!-- This specific div gets turned into the PDF -->
-      <div id="printableBill" style="background: #ffffff; padding: 20px; border: 1px solid #d7dbde; border-radius: 4px; margin-bottom: 20px;">
-        <div style="text-align:center; border-bottom: 2px solid #3d4a58; padding-bottom:10px; margin-bottom: 15px;">
-           <h2 style="font-family: 'Arial Narrow', sans-serif; text-transform: uppercase; margin:0; color: #232a31; font-size: 24px;">Sharma Pipes & Fittings</h2>
-           <div style="font-size:12px; color: #64758a; margin-top: 4px;">Tax Invoice / E-Bill</div>
-        </div>
-        
-        <div style="display:flex; justify-content:space-between; margin-bottom: 15px; font-size: 13px; color: #232a31;">
-          <div><b>Bill To:</b><br>${custName}<br>${custPhone}</div>
-          <div style="text-align:right;"><b>Date:</b><br>${dateString}</div>
-        </div>
-        
-        <div style="font-size: 13px; color: #232a31; margin-bottom: 15px;">
-          <b>Delivery Address:</b><br>${custAdd}
-        </div>
-        
-        <div style="border-top: 1px dashed #d7dbde; border-bottom: 1px dashed #d7dbde; padding: 12px 0; margin-bottom: 15px;">
-          ${receiptItemsList.join("")}
-        </div>
-        
-        <div style="display: flex; justify-content: space-between; font-weight: bold; font-size: 18px; color: #9c4623;">
-          <span>GRAND TOTAL</span>
-          <span>₹${currentOrderGrandTotal}</span>
-        </div>
-      </div>
-      
-      <!-- Action Buttons -->
-      <div class="modal-actions" style="margin-top: 0;">
-        <button class="btn btn-pdf" onclick="downloadPDF()">Download PDF Bill</button>
-        <button class="btn btn-submit" onclick="window.location.reload();">Close Shop</button>
-      </div>
-    `;
+    fetch(APPS_SCRIPT_URL, { method: "POST", mode: "no-cors", body: JSON.stringify(payload) });
     cart = {}; 
-  } catch (err) {
-    msg.textContent = "Something went wrong. Please try again.";
-    msg.className = "form-msg error";
-    submitBtn.disabled = false;
-    submitBtn.textContent = "Place Order";
-  } 
+  });
 });
 
-renderProducts();
-updateStatusBar();
-setInterval(() => { renderProducts(); updateStatusBar(); }, 60000);
+renderProducts(); updateStatusBar(); setInterval(() => { renderProducts(); updateStatusBar(); }, 60000);
 </script>
-
 </body>
 </html>
