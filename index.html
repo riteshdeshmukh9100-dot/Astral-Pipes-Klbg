@@ -232,7 +232,7 @@ document.getElementById("cancelBtn").addEventListener("click", closeModal);
 document.getElementById("orderOverlay").addEventListener("click", (e) => { if (e.target.id === "orderOverlay") closeModal(); });
 
 /* =========================================
-   REAL GSTIN API VERIFICATION LOGIC (CORS FIXED)
+   REAL GSTIN API VERIFICATION LOGIC (NEW PROXY)
 ========================================= */
 document.getElementById('verifyGstBtn').addEventListener('click', () => {
   const gstInput = document.getElementById('custGst').value.trim().toUpperCase();
@@ -243,11 +243,66 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
   
   const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
   if (!gstRegex.test(gstInput)) {
-    gstMsg.textContent = "❌ Invalid GSTIN format."; gstMsg.style.color = "var(--rust-dark)"; submitBtn.disabled = true; return;
+    gstMsg.textContent = "❌ Invalid GSTIN format."; 
+    gstMsg.style.color = "var(--rust-dark)"; 
+    submitBtn.disabled = true; 
+    return;
   }
 
   gstMsg.textContent = "⏳ Verifying & connecting to portal...";
   gstMsg.style.color = "#d97706"; 
+
+  // Using a stronger proxy bridge
+  const targetApiUrl = `https://gstincheck.co.in/api/v1/verify?apikey=${API_KEY}&gstin=${gstInput}`;
+  const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetApiUrl)}`;
+
+  fetch(proxyUrl)
+    .then(async res => {
+      // If the server connects but rejects the key, catch the exact reason
+      if (!res.ok) {
+        const errText = await res.text();
+        throw new Error(`HTTP ${res.status}: ${errText.substring(0, 40)}`); 
+      }
+      return res.json();
+    })
+    .then(data => {
+      if (data && (data.flag === true || data.data || data.legal_name)) {
+        
+        const gstData = data.data || data; 
+        
+        gstMsg.textContent = "✅ GSTIN Verified Successfully!";
+        gstMsg.style.color = "var(--ok)";
+        nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
+        
+        // Extract Name
+        nameField.value = gstData.tradeNam || gstData.trade_name || gstData.lgnm || gstData.legal_name || "";
+        
+        // Extract Address
+        const pradr = gstData.pradr || gstData.principal_address;
+        if (pradr) {
+          if (typeof pradr === 'object' && pradr.addr) {
+            addField.value = `${pradr.addr.bno || ''} ${pradr.addr.st || ''} ${pradr.addr.loc || ''}, ${pradr.addr.dst || ''} - ${pradr.addr.pncd || ''}`.trim();
+          } else if (pradr.adr) {
+            addField.value = `${pradr.adr} - ${pradr.pncd || ''}`;
+          } else {
+            addField.value = "Address found. Please verify/edit manually.";
+          }
+        }
+      } else {
+        gstMsg.textContent = "⚠️ GSTIN not active or found. Please type manually.";
+        gstMsg.style.color = "var(--rust-dark)";
+        nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
+        nameField.value = ""; addField.value = "";
+      }
+    })
+    .catch(err => {
+      // PRINTS THE EXACT ERROR TO THE SCREEN SO WE CAN SEE IT!
+      gstMsg.textContent = `⚠️ Error: ${err.message}. Please type manually.`;
+      gstMsg.style.color = "#d97706";
+      nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
+      nameField.value = ""; addField.value = "";
+    });
+});
 
   // CORS Proxy bridge to fetch data safely
   const targetApiUrl = `https://gstincheck.co.in/api/v1/verify?apikey=${API_KEY}&gstin=${gstInput}`;
@@ -415,6 +470,3 @@ renderProducts(); updateStatusBar(); setInterval(() => { renderProducts(); updat
 </body>
 </html>
 
-
-
- 
