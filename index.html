@@ -232,7 +232,11 @@ document.getElementById("cancelBtn").addEventListener("click", closeModal);
 document.getElementById("orderOverlay").addEventListener("click", (e) => { if (e.target.id === "orderOverlay") closeModal(); });
 
 /* =========================================
-   REAL GSTIN API VERIFICATION LOGIC (NEW PROXY)
+   REAL GSTIN API VERIFICATION LOGIC (FIXED ENDPOINT)
+   gstincheck.co.in's actual documented endpoint is:
+   https://sheet.gstincheck.co.in/check/API_KEY/GSTIN_NUMBER
+   (the old /api/v1/verify?apikey=...&gstin=... URL does not exist on
+   their service, which is why every call was failing before)
 ========================================= */
 document.getElementById('verifyGstBtn').addEventListener('click', () => {
   const gstInput = document.getElementById('custGst').value.trim().toUpperCase();
@@ -252,8 +256,8 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
   gstMsg.textContent = "⏳ Verifying & connecting to portal...";
   gstMsg.style.color = "#d97706"; 
 
-  // Using a stronger proxy bridge
-  const targetApiUrl = `https://gstincheck.co.in/api/v1/verify?apikey=${API_KEY}&gstin=${gstInput}`;
+  // Correct gstincheck.co.in endpoint format
+  const targetApiUrl = `https://sheet.gstincheck.co.in/check/${API_KEY}/${gstInput}`;
   const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetApiUrl)}`;
 
   fetch(proxyUrl)
@@ -266,7 +270,7 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
       return res.json();
     })
     .then(data => {
-      if (data && (data.flag === true || data.data || data.legal_name)) {
+      if (data && (data.flag === true || data.data || data.legal_name || data.lgnm)) {
         
         const gstData = data.data || data; 
         
@@ -284,6 +288,8 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
             addField.value = `${pradr.addr.bno || ''} ${pradr.addr.st || ''} ${pradr.addr.loc || ''}, ${pradr.addr.dst || ''} - ${pradr.addr.pncd || ''}`.trim();
           } else if (pradr.adr) {
             addField.value = `${pradr.adr} - ${pradr.pncd || ''}`;
+          } else if (typeof pradr === 'string') {
+            addField.value = pradr;
           } else {
             addField.value = "Address found. Please verify/edit manually.";
           }
