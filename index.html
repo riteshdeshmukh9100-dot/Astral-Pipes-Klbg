@@ -304,53 +304,6 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
     });
 });
 
-  // CORS Proxy bridge to fetch data safely
-  const targetApiUrl = `https://gstincheck.co.in/api/v1/verify?apikey=${API_KEY}&gstin=${gstInput}`;
-  const proxyUrl = `https://api.allorigins.win/raw?url=${encodeURIComponent(targetApiUrl)}`;
-
-  fetch(proxyUrl)
-    .then(res => {
-      if (!res.ok) throw new Error("Network response was not ok");
-      return res.json();
-    })
-    .then(data => {
-      if (data && (data.flag === true || data.data)) {
-        
-        const gstData = data.data || data; 
-        
-        gstMsg.textContent = "✅ GSTIN Verified Successfully!";
-        gstMsg.style.color = "var(--ok)";
-        nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
-        
-        // Extract Name
-        nameField.value = gstData.tradeNam || gstData.trade_name || gstData.lgnm || gstData.legal_name || "";
-        
-        // Extract Address
-        const pradr = gstData.pradr || gstData.principal_address;
-        if (pradr) {
-          if (typeof pradr === 'object' && pradr.addr) {
-            addField.value = `${pradr.addr.bno || ''} ${pradr.addr.st || ''} ${pradr.addr.loc || ''}, ${pradr.addr.dst || ''} - ${pradr.addr.pncd || ''}`.trim();
-          } else if (pradr.adr) {
-            addField.value = `${pradr.adr} - ${pradr.pncd || ''}`;
-          } else {
-            addField.value = "Address found. Please verify/edit manually.";
-          }
-        }
-      } else {
-        gstMsg.textContent = "⚠️ GSTIN not active or found. Please type manually.";
-        gstMsg.style.color = "var(--rust-dark)";
-        nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
-        nameField.value = ""; addField.value = ""; nameField.placeholder = "Enter Company Name"; addField.placeholder = "Enter Billing Address";
-      }
-    })
-    .catch(err => {
-      gstMsg.textContent = "⚠️ Portal connection blocked. Please type details manually.";
-      gstMsg.style.color = "#d97706";
-      nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
-      nameField.value = ""; addField.value = ""; nameField.placeholder = "Enter Company Name"; addField.placeholder = "Enter Billing Address";
-    });
-});
-
 function numberToWords(num) {
     const a = ['','One ','Two ','Three ','Four ', 'Five ','Six ','Seven ','Eight ','Nine ','Ten ','Eleven ','Twelve ','Thirteen ','Fourteen ','Fifteen ','Sixteen ','Seventeen ','Eighteen ','Nineteen '];
     const b = ['', '', 'Twenty','Thirty','Forty','Fifty', 'Sixty','Seventy','Eighty','Ninety'];
@@ -469,4 +422,3 @@ renderProducts(); updateStatusBar(); setInterval(() => { renderProducts(); updat
 </script>
 </body>
 </html>
-
