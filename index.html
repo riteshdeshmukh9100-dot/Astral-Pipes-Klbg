@@ -138,11 +138,11 @@
 
       <div class="field">
         <label for="custName">Company Name</label>
-        <input type="text" id="custName" placeholder="Authenticating GSTIN..." readonly required>
+        <input type="text" id="custName" placeholder="Enter Company Name" readonly required>
       </div>
       <div class="field">
         <label for="custAdd">Billing Address</label>
-        <textarea id="custAdd" rows="2" placeholder="Authenticating GSTIN..." readonly required></textarea>
+        <textarea id="custAdd" rows="2" placeholder="Enter Billing Address" readonly required></textarea>
       </div>
       <div class="field">
         <label for="custPhone">Contact Phone</label>
@@ -250,17 +250,24 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
 
   gstMsg.textContent = "⏳ Bypassing blocks & fetching via Google Servers...";
   gstMsg.style.color = "#d97706"; 
+  nameField.placeholder = "Authenticating GSTIN...";
+  addField.placeholder = "Authenticating GSTIN...";
 
-  // Calls your own unblockable Google Apps Script directly!
   const targetApiUrl = `${APPS_SCRIPT_URL}?gstin=${gstInput}`;
 
   fetch(targetApiUrl)
     .then(async res => {
-      if (!res.ok) throw new Error("Google Script Error");
-      return res.json();
+      if (!res.ok) throw new Error("Google Script blocked access");
+      
+      const rawText = await res.text();
+      try {
+        return JSON.parse(rawText);
+      } catch (e) {
+        throw new Error("Google Script is not deployed properly (Did you set 'Who has access' to 'Anyone'?)");
+      }
     })
     .then(data => {
-      if (data && (data.flag === true || data.data || data.legal_name)) {
+      if (data && !data.error && (data.flag === true || data.data || data.legal_name)) {
         
         const gstData = data.data || data; 
         
@@ -287,13 +294,15 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
         gstMsg.style.color = "var(--rust-dark)";
         nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
         nameField.value = ""; addField.value = "";
+        nameField.placeholder = "Enter Company Name"; addField.placeholder = "Enter Billing Address";
       }
     })
     .catch(err => {
-      gstMsg.textContent = `⚠️ Error fetching data. Please type manually.`;
+      gstMsg.textContent = `⚠️ ${err.message}`;
       gstMsg.style.color = "#d97706";
       nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
       nameField.value = ""; addField.value = "";
+      nameField.placeholder = "Enter Company Name"; addField.placeholder = "Enter Billing Address";
     });
 });
 
