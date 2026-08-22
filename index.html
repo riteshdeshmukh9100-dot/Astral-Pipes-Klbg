@@ -168,7 +168,6 @@ const PRODUCTS = [
 
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby9h2bDpfp-lpy8Heg6iobTaNX-pHTyIHsY8mZjRTQRlCZYUN6MkD9XALw5TYJ_rDshUQ/exec";
 const OPEN_HOUR = 10; const CLOSE_HOUR = 23; 
-const API_KEY = "48071a846133b94c972cdbc19812c62d"; // YOUR REAL API KEY
 
 let cart = {}; let currentOrderGrandTotal = 0; 
 
@@ -232,11 +231,7 @@ document.getElementById("cancelBtn").addEventListener("click", closeModal);
 document.getElementById("orderOverlay").addEventListener("click", (e) => { if (e.target.id === "orderOverlay") closeModal(); });
 
 /* =========================================
-   REAL GSTIN API VERIFICATION LOGIC (FIXED ENDPOINT)
-   gstincheck.co.in's actual documented endpoint is:
-   https://sheet.gstincheck.co.in/check/API_KEY/GSTIN_NUMBER
-   (the old /api/v1/verify?apikey=...&gstin=... URL does not exist on
-   their service, which is why every call was failing before)
+   ULTIMATE GSTIN API VERIFICATION (VIA GOOGLE)
 ========================================= */
 document.getElementById('verifyGstBtn').addEventListener('click', () => {
   const gstInput = document.getElementById('custGst').value.trim().toUpperCase();
@@ -253,24 +248,19 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
     return;
   }
 
-  gstMsg.textContent = "⏳ Verifying & connecting to portal...";
+  gstMsg.textContent = "⏳ Bypassing blocks & fetching via Google Servers...";
   gstMsg.style.color = "#d97706"; 
 
-  // Correct gstincheck.co.in endpoint format
-  const targetApiUrl = `https://sheet.gstincheck.co.in/check/${API_KEY}/${gstInput}`;
-  const proxyUrl = `https://api.codetabs.com/v1/proxy?quest=${encodeURIComponent(targetApiUrl)}`;
+  // Calls your own unblockable Google Apps Script directly!
+  const targetApiUrl = `${APPS_SCRIPT_URL}?gstin=${gstInput}`;
 
-  fetch(proxyUrl)
+  fetch(targetApiUrl)
     .then(async res => {
-      // If the server connects but rejects the key, catch the exact reason
-      if (!res.ok) {
-        const errText = await res.text();
-        throw new Error(`HTTP ${res.status}: ${errText.substring(0, 40)}`); 
-      }
+      if (!res.ok) throw new Error("Google Script Error");
       return res.json();
     })
     .then(data => {
-      if (data && (data.flag === true || data.data || data.legal_name || data.lgnm)) {
+      if (data && (data.flag === true || data.data || data.legal_name)) {
         
         const gstData = data.data || data; 
         
@@ -288,8 +278,6 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
             addField.value = `${pradr.addr.bno || ''} ${pradr.addr.st || ''} ${pradr.addr.loc || ''}, ${pradr.addr.dst || ''} - ${pradr.addr.pncd || ''}`.trim();
           } else if (pradr.adr) {
             addField.value = `${pradr.adr} - ${pradr.pncd || ''}`;
-          } else if (typeof pradr === 'string') {
-            addField.value = pradr;
           } else {
             addField.value = "Address found. Please verify/edit manually.";
           }
@@ -302,8 +290,7 @@ document.getElementById('verifyGstBtn').addEventListener('click', () => {
       }
     })
     .catch(err => {
-      // PRINTS THE EXACT ERROR TO THE SCREEN SO WE CAN SEE IT!
-      gstMsg.textContent = `⚠️ Error: ${err.message}. Please type manually.`;
+      gstMsg.textContent = `⚠️ Error fetching data. Please type manually.`;
       gstMsg.style.color = "#d97706";
       nameField.readOnly = false; addField.readOnly = false; submitBtn.disabled = false;
       nameField.value = ""; addField.value = "";
